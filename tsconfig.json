@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "target": "ES2023",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "types": ["node", "jest"],
+
+        "rootDir": "./",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+
+        "outDir": "./dist",
+        "declaration": true,
+        "sourceMap": true,
+        "removeComments": true,
+        "incremental": true,
+
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+
+        "strict": true,
+        "isolatedModules": true,
+        "noImplicitAny": false,
+        "strictPropertyInitialization": false,
+        "strictBindCallApply": false,
+        "noFallthroughCasesInSwitch": false
+    },
+    "include": ["src/**/*", "test/**/*"],
+    "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,175 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+enum Major {
+    DTI
+    BBA
+    APDI
+    CIVIL
+    MECHANICAL
+    ELECTRICAL
+    ARCHITECTURE
+    IT
+}
+
+enum Category {
+    HACKATHON
+    CAPSTONE
+    STUDY_GROUP
+    WORKSHOP
+    SEMINAR
+    CLUB_EVENT
+    COMPETITION
+    OTHER
+}
+
+enum OtpPurpose {
+    SIGNUP
+    FORGOT_PASSWORD
+}
+
+enum ReportReason {
+    SPAM
+    INAPPROPRIATE_CONTENT
+    HARASSMENT
+    MISINFORMATION
+    OTHER
+}
+
+enum ReportStatus {
+    PENDING
+    REVIEWED
+    RESOLVED
+    DISMISSED
+}
+
+model User {
+    id            String        @id @default(uuid())
+    email         String        @unique
+    password      String
+    fullName      String
+    major         Major
+    avatarUrl     String?
+    emailVerified Boolean       @default(false)
+    createdAt     DateTime      @default(now())
+    events       Event[]
+    comments     Comment[]
+    upvotes      Upvote[]
+    savedEvents  SavedEvent[]
+    commentLikes CommentLike[]
+    otps         Otp[]
+    reportsReceived Report[] @relation("ReportedUser")
+    reportsFiled    Report[] @relation("Reporter")
+
+    @@map("users")
+}
+
+model Event {
+    id          String    @id @default(uuid())
+    title       String
+    description String    @db.Text
+    category    Category
+    imageUrls   String[]
+    viewCount   Int       @default(0)
+    createdAt   DateTime  @default(now())
+    userId      String
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    comments    Comment[]
+    upvotes     Upvote[]
+    savedBy     SavedEvent[]
+    reports     Report[]
+
+    @@index([userId])
+    @@index([category])
+    @@index([createdAt])
+    @@map("events")
+}
+
+model Upvote {
+    userId  String
+    eventId String
+    user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@id([userId, eventId])
+    @@map("upvotes")
+}
+
+model Comment {
+    id        String        @id @default(uuid())
+    content   String        @db.Text
+    createdAt DateTime      @default(now())
+    eventId   String
+    userId    String
+    event     Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+    user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    likes     CommentLike[]
+    reports   Report[]
+
+    @@index([eventId])
+    @@map("comments")
+}
+
+model CommentLike {
+    userId    String
+    commentId String
+    user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+    @@id([userId, commentId])
+    @@map("comment_likes")
+}
+
+model SavedEvent {
+    userId    String
+    eventId   String
+    createdAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+    @@id([userId, eventId])
+    @@map("saved_events")
+}
+
+model Otp {
+    id        String     @id @default(uuid())
+    email     String
+    code      String
+    purpose   OtpPurpose
+    expiresAt DateTime
+    createdAt DateTime   @default(now())
+    user      User?      @relation(fields: [email], references: [email])
+
+    @@index([email, purpose])
+    @@map("otps")
+}
+
+model Report {
+    id             String       @id @default(uuid())
+    reason         ReportReason
+    note           String?      @db.Text
+    status         ReportStatus @default(PENDING)
+    createdAt      DateTime     @default(now())
+
+    reporterId     String
+    reportedUserId String?
+    eventId        String?
+    commentId      String?
+
+    reporter       User?    @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+    reportedUser   User?    @relation("ReportedUser", fields: [reportedUserId], references: [id])
+    event          Event?   @relation(fields: [eventId], references: [id])
+    comment        Comment? @relation(fields: [commentId], references: [id])
+
+    @@index([status])
+    @@index([reporterId])
+    @@index([reportedUserId])
+    @@index([eventId])
+    @@index([commentId])
+    @@map("reports")
+}
