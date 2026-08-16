@@ -37,7 +37,7 @@ export class EventsService {
 
         const where: Prisma.EventWhereInput = {};
         if (category) where.category = category;
-        if (major) where.user = { major };
+        if (major) where.major = major;
         if (search) {
             where.OR = [
                 { title: { contains: search, mode: 'insensitive' } },
@@ -150,6 +150,7 @@ export class EventsService {
                 description: dto.description,
                 category: dto.category,
                 imageUrls: dto.imageUrls ?? [],
+                major: dto.major ?? undefined,
                 userId,
             },
             select: eventDetailSelect,
@@ -189,6 +190,9 @@ export class EventsService {
                 }),
                 ...(dto.category !== undefined && {
                     category: dto.category,
+                }),
+                ...(dto.major !== undefined && {
+                    major: dto.major,
                 }),
             },
             select: eventDetailSelect,
@@ -431,3 +435,6 @@ export class EventsService {
         };
     }
 }
+
+
+

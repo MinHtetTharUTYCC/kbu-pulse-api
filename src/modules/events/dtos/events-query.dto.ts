@@ -14,7 +14,7 @@ export class EventsQueryDto extends PaginationQueryDto {
 
     @ApiPropertyOptional({
         enum: Major,
-        description: "Filter by author's major",
+        description: "Filter by event major",
     })
     @IsEnum(Major)
     @IsOptional()
@@ -34,3 +34,4 @@ export class EventsQueryDto extends PaginationQueryDto {
     @IsOptional()
     sort?: 'newest' | 'trending' = 'newest';
 }
+

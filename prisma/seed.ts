@@ -22,6 +22,8 @@ const CATEGORIES = [
     'SEMINAR', 'CLUB_EVENT', 'COMPETITION', 'OTHER',
 ] as const
 
+const MAJORS = ['DTI', 'BBA', 'APDI', 'CIVIL', 'MECHANICAL', 'ELECTRICAL', 'ARCHITECTURE', 'IT'] as const
+
 const EVENT_TITLES = [
     'Hackathon 2026', 'Capstone Project Meetup', 'Study Group: Algorithms',
     'Workshop: React Basics', 'Seminar: AI in Education', 'Club Event: Movie Night',
@@ -125,6 +127,7 @@ async function main() {
                 description: pick(EVENT_DESCRIPTIONS),
                 category: pick(CATEGORIES),
                 imageUrls: [EVENT_IMAGE_URL, EVENT_IMAGE_URL, EVENT_IMAGE_URL, EVENT_IMAGE_URL],
+                major: Math.random() < 0.7 ? pick(MAJORS) : null,
                 userId: user.id,
                 createdAt: randomDate(30),
             },
@@ -158,3 +161,4 @@ main().catch(async (e) => {
     console.error('Seed failed:', e)
     process.exit(1)
 })
+

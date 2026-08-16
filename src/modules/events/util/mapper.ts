@@ -11,6 +11,7 @@ export function toEventListItem(
         title: event.title,
         description: event.description,
         category: event.category,
+        major: event.major ?? null,
         imageUrls: event.imageUrls,
         createdAt: event.createdAt,
         author: {
@@ -35,6 +36,7 @@ export function toEventDetail(
         title: event.title,
         description: event.description,
         category: event.category,
+        major: event.major ?? null,
         imageUrls: event.imageUrls,
         viewCount: event.viewCount,
         createdAt: event.createdAt,
@@ -49,3 +51,4 @@ export function toEventDetail(
         hasSaved,
     };
 }
+

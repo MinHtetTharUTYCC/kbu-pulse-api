@@ -25,6 +25,9 @@ export class EventDetailDto {
     @ApiProperty({ enum: Category })
     category: Category;
 
+    @ApiProperty({ enum: Major, nullable: true })
+    major: Major | null;
+
     @ApiProperty({ type: [String] })
     imageUrls: string[];
 
@@ -49,3 +52,4 @@ export class EventDetailDto {
     @ApiProperty()
     hasSaved: boolean;
 }
+

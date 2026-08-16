@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
-import { Category } from '@prisma/client';
+import { Category, Major } from '@prisma/client';
 
 export class CreateEventDto {
     @ApiProperty({ example: 'Smart Campus App', description: 'Event title' })
@@ -24,6 +24,16 @@ export class CreateEventDto {
     @IsEnum(Category)
     @IsNotEmpty()
     category: Category;
+
+    @ApiProperty({
+        enum: Major,
+        example: Major.IT,
+        description: 'Event major (optional)',
+        required: false,
+    })
+    @IsEnum(Major)
+    @IsOptional()
+    major?: Major;
 
     @ApiProperty({
         example: ['https://example.com/img1.webp'],

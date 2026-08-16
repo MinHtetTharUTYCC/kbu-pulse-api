@@ -74,6 +74,7 @@ model Event {
     title       String
     description String    @db.Text
     category    Category
+    major       Major?
     imageUrls   String[]
     viewCount   Int       @default(0)
     createdAt   DateTime  @default(now())
@@ -86,6 +87,7 @@ model Event {
 
     @@index([userId])
     @@index([category])
+    @@index([major])
     @@index([createdAt])
     @@map("events")
 }
@@ -173,3 +175,4 @@ model Report {
     @@index([commentId])
     @@map("reports")
 }
+

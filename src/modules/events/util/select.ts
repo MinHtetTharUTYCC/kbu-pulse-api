@@ -5,6 +5,7 @@ export const eventListItemSelect = {
     title: true,
     description: true,
     category: true,
+    major: true,
     imageUrls: true,
     createdAt: true,
     user: {
@@ -30,6 +31,7 @@ export const eventDetailSelect = {
     title: true,
     description: true,
     category: true,
+    major: true,
     imageUrls: true,
     viewCount: true,
     createdAt: true,
@@ -51,3 +53,4 @@ export const eventDetailSelect = {
 export type EventDetailPayload = Prisma.EventGetPayload<{
     select: typeof eventDetailSelect;
 }>;
+

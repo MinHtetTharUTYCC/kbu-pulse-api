@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { Category } from '@prisma/client';
+import { Category, Major } from '@prisma/client';
 
 export class UpdateEventDto {
     @ApiPropertyOptional({ example: 'Smart Campus App v2' })
@@ -20,4 +20,14 @@ export class UpdateEventDto {
     @IsEnum(Category)
     @IsOptional()
     category?: Category;
+
+    @ApiPropertyOptional({
+        enum: Major,
+        example: Major.IT,
+        description: 'Event major',
+    })
+    @IsEnum(Major)
+    @IsOptional()
+    major?: Major;
 }
+
