@@ -149,6 +149,7 @@ export class EventsService {
                 title: dto.title,
                 description: dto.description,
                 category: dto.category,
+                imageUrls: dto.imageUrls ?? [],
                 userId,
             },
             select: eventDetailSelect,

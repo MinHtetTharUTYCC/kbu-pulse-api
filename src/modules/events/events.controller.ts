@@ -20,14 +20,18 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { MessageResponseDto } from '@/common/dto/message-response.dto';
 import { ImageUploadPipe } from '@/common/pipe/upload-image-pipe';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dtos/create-event.dto';
 import { UpdateEventDto } from './dtos/update-event.dto';
 import { EventsQueryDto } from './dtos/events-query.dto';
 import { SavedEventsQueryDto } from './dtos/saved-events-query.dto';
-import { EventListItemDto } from './dtos/response/event-response.dto';
+import { PaginatedEventListItemDto } from './dtos/response/paginated-event-list-item.dto';
 import { EventDetailDto } from './dtos/response/event-detail-response.dto';
+import { UploadImagesResponseDto } from './dtos/response/upload-images-response.dto';
+import { ToggleUpvoteResponseDto } from './dtos/response/toggle-upvote-response.dto';
+import { ToggleSaveResponseDto } from './dtos/response/toggle-save-response.dto';
 
 @ApiTags('Events')
 @ApiHeader({
@@ -41,7 +45,7 @@ export class EventsController {
 
     @Get()
     @ApiOperation({ summary: 'List events with filters and pagination' })
-    @ApiResponse({ status: 200, description: 'Paginated list of events' })
+    @ApiResponse({ status: 200, description: 'Paginated list of events', type: PaginatedEventListItemDto })
     async findAll(
         @Query() query: EventsQueryDto,
         @CurrentUser(false) userId?: string,
@@ -52,8 +56,8 @@ export class EventsController {
     @Get('saved')
 
     @ApiOperation({ summary: 'Get saved/bookmarked events' })
-    @ApiResponse({ status: 200, description: 'Paginated list of saved events' })
-    @ApiResponse({ status: 401, description: 'Unauthorized â€” missing x-user-id header' })
+    @ApiResponse({ status: 200, description: 'Paginated list of saved events', type: PaginatedEventListItemDto })
+    @ApiResponse({ status: 401, description: 'Unauthorized — missing x-user-id header' })
     async findSaved(
         @Query() query: SavedEventsQueryDto,
         @CurrentUser() userId: string,
@@ -93,7 +97,7 @@ export class EventsController {
     @ApiResponse({ status: 200, description: 'Event updated', type: EventDetailDto })
     @ApiResponse({ status: 400, description: 'Validation failed' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 403, description: 'Forbidden â€” not the event owner' })
+    @ApiResponse({ status: 403, description: 'Forbidden — not the event owner' })
     @ApiResponse({ status: 404, description: 'Event not found' })
     async update(
         @Param('id') id: string,
@@ -109,10 +113,10 @@ export class EventsController {
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: 'Upload images for an event (max 4)' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
-    @ApiResponse({ status: 201, description: 'Images uploaded, URLs returned' })
+    @ApiResponse({ status: 201, description: 'Images uploaded, URLs returned', type: UploadImagesResponseDto })
     @ApiResponse({ status: 400, description: 'Validation failed or max 4 images exceeded' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 403, description: 'Forbidden â€” not the event owner' })
+    @ApiResponse({ status: 403, description: 'Forbidden — not the event owner' })
     @ApiResponse({ status: 404, description: 'Event not found' })
     async uploadImages(
         @Param('id') id: string,
@@ -127,9 +131,9 @@ export class EventsController {
 
     @ApiOperation({ summary: 'Delete an event (owner only)' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
-    @ApiResponse({ status: 200, description: 'Event deleted' })
+    @ApiResponse({ status: 200, description: 'Event deleted', type: MessageResponseDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 403, description: 'Forbidden â€” not the event owner' })
+    @ApiResponse({ status: 403, description: 'Forbidden — not the event owner' })
     @ApiResponse({ status: 404, description: 'Event not found' })
     async remove(
         @Param('id') id: string,
@@ -143,7 +147,7 @@ export class EventsController {
 
     @ApiOperation({ summary: 'Toggle upvote on an event' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
-    @ApiResponse({ status: 200, description: 'Upvote toggled' })
+    @ApiResponse({ status: 200, description: 'Upvote toggled', type: ToggleUpvoteResponseDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 404, description: 'Event not found' })
     async toggleUpvote(
@@ -157,7 +161,7 @@ export class EventsController {
 
     @ApiOperation({ summary: 'Toggle bookmark/save on an event' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
-    @ApiResponse({ status: 200, description: 'Save toggled' })
+    @ApiResponse({ status: 200, description: 'Save toggled', type: ToggleSaveResponseDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 404, description: 'Event not found' })
     async toggleSave(

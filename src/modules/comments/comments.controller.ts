@@ -15,10 +15,13 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { MessageResponseDto } from '@/common/dto/message-response.dto';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dtos/create-comment.dto';
 import { CommentsQueryDto } from './dtos/comments-query.dto';
+import { PaginatedCommentListItemDto } from './dtos/response/paginated-comment-list-item.dto';
 import { CommentListItemDto } from './dtos/response/comment-response.dto';
+import { ToggleLikeResponseDto } from './dtos/response/toggle-like-response.dto';
 
 @ApiTags('Comments')
 @ApiHeader({
@@ -33,7 +36,7 @@ export class CommentsController {
     @Get('events/:eventId/comments')
     @ApiOperation({ summary: 'List comments for an event' })
     @ApiParam({ name: 'eventId', description: 'Event UUID' })
-    @ApiResponse({ status: 200, description: 'Paginated list of comments' })
+    @ApiResponse({ status: 200, description: 'Paginated list of comments', type: PaginatedCommentListItemDto })
     async findByEvent(
         @Param('eventId') eventId: string,
         @Query() query: CommentsQueryDto,
@@ -62,7 +65,7 @@ export class CommentsController {
 
     @ApiOperation({ summary: 'Toggle like on a comment' })
     @ApiParam({ name: 'commentId', description: 'Comment UUID' })
-    @ApiResponse({ status: 200, description: 'Like toggled' })
+    @ApiResponse({ status: 200, description: 'Like toggled', type: ToggleLikeResponseDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 404, description: 'Comment not found' })
     async toggleLike(
@@ -76,9 +79,9 @@ export class CommentsController {
 
     @ApiOperation({ summary: 'Delete a comment (owner only)' })
     @ApiParam({ name: 'commentId', description: 'Comment UUID' })
-    @ApiResponse({ status: 200, description: 'Comment deleted' })
+    @ApiResponse({ status: 200, description: 'Comment deleted', type: MessageResponseDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
-    @ApiResponse({ status: 403, description: 'Forbidden â€” not the comment owner' })
+    @ApiResponse({ status: 403, description: 'Forbidden — not the comment owner' })
     @ApiResponse({ status: 404, description: 'Comment not found' })
     async remove(
         @Param('commentId') commentId: string,

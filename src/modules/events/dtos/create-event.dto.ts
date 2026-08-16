@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 import { Category } from '@prisma/client';
 
 export class CreateEventDto {
@@ -24,4 +24,14 @@ export class CreateEventDto {
     @IsEnum(Category)
     @IsNotEmpty()
     category: Category;
+
+    @ApiProperty({
+        example: ['https://example.com/img1.webp'],
+        description: 'List of image URLs (max 4)',
+        required: false,
+    })
+    @IsOptional()
+    @IsArray()
+    @IsUrl({}, { each: true })
+    imageUrls?: string[];
 }

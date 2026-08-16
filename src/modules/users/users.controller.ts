@@ -21,6 +21,9 @@ import { UsersService } from './users.service';
 import { EventsService } from '@/modules/events/events.service';
 import { CommentsService } from '@/modules/comments/comments.service';
 import { UserResponseDto } from './dtos/response/user-response.dto';
+import { UploadAvatarResponseDto } from './dtos/response/upload-avatar-response.dto';
+import { PaginatedProfileEventDto } from './dtos/response/paginated-profile-event.dto';
+import { PaginatedProfileCommentDto } from './dtos/response/paginated-profile-comment.dto';
 
 @ApiTags('Users')
 @ApiHeader({
@@ -49,7 +52,7 @@ export class UsersController {
     @UseInterceptors(FileInterceptor('file'))
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: 'Upload profile avatar (10MB max)' })
-    @ApiResponse({ status: 201, description: 'Avatar uploaded' })
+    @ApiResponse({ status: 201, description: 'Avatar uploaded', type: UploadAvatarResponseDto })
     @ApiResponse({ status: 400, description: 'Validation failed or file too large' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 404, description: 'User not found' })
@@ -62,7 +65,7 @@ export class UsersController {
 
     @Get('me/events')
     @ApiOperation({ summary: 'Get events created by current user' })
-    @ApiResponse({ status: 200, description: 'Paginated list of user events' })
+    @ApiResponse({ status: 200, description: 'Paginated list of user events', type: PaginatedProfileEventDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     async getMyEvents(
         @CurrentUser() userId: string,
@@ -73,7 +76,7 @@ export class UsersController {
 
     @Get('me/comments')
     @ApiOperation({ summary: 'Get comments made by current user' })
-    @ApiResponse({ status: 200, description: 'Paginated list of user comments' })
+    @ApiResponse({ status: 200, description: 'Paginated list of user comments', type: PaginatedProfileCommentDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     async getMyComments(
         @CurrentUser() userId: string,
