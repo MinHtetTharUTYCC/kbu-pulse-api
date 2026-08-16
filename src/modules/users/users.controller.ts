@@ -15,6 +15,8 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { AuthGuard } from '@/common/guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto';
 import { ImageUploadPipe } from '@/common/pipe/upload-image-pipe';
 import { UsersService } from './users.service';
@@ -40,6 +42,7 @@ export class UsersController {
     ) {}
 
     @Get('me')
+    @UseGuards(AuthGuard)
     @ApiOperation({ summary: 'Get current user profile' })
     @ApiResponse({ status: 200, description: 'User profile', type: UserResponseDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -49,6 +52,7 @@ export class UsersController {
     }
 
     @Post('upload-profile')
+    @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('file'))
     @ApiConsumes('multipart/form-data')
     @ApiOperation({ summary: 'Upload profile avatar (10MB max)' })
@@ -64,6 +68,7 @@ export class UsersController {
     }
 
     @Get('me/events')
+    @UseGuards(AuthGuard)
     @ApiOperation({ summary: 'Get events created by current user' })
     @ApiResponse({ status: 200, description: 'Paginated list of user events', type: PaginatedProfileEventDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -75,6 +80,7 @@ export class UsersController {
     }
 
     @Get('me/comments')
+    @UseGuards(AuthGuard)
     @ApiOperation({ summary: 'Get comments made by current user' })
     @ApiResponse({ status: 200, description: 'Paginated list of user comments', type: PaginatedProfileCommentDto })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -85,3 +91,4 @@ export class UsersController {
         return this.commentsService.getMyComments(userId, query.page!, query.limit!);
     }
 }
+

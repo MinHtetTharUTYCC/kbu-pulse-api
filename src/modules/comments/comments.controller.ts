@@ -15,6 +15,8 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { AuthGuard } from '@/common/guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 import { MessageResponseDto } from '@/common/dto/message-response.dto';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dtos/create-comment.dto';
@@ -46,6 +48,7 @@ export class CommentsController {
     }
 
     @Post('events/:eventId/comments')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Add a comment to an event' })
     @ApiParam({ name: 'eventId', description: 'Event UUID' })
@@ -62,6 +65,7 @@ export class CommentsController {
     }
 
     @Post('comments/:commentId/like')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Toggle like on a comment' })
     @ApiParam({ name: 'commentId', description: 'Comment UUID' })
@@ -76,6 +80,7 @@ export class CommentsController {
     }
 
     @Delete('comments/:commentId')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Delete a comment (owner only)' })
     @ApiParam({ name: 'commentId', description: 'Comment UUID' })
@@ -91,3 +96,4 @@ export class CommentsController {
         return { message: 'Comment deleted' };
     }
 }
+

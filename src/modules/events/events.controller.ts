@@ -20,6 +20,8 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { AuthGuard } from '@/common/guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 import { MessageResponseDto } from '@/common/dto/message-response.dto';
 import { ImageUploadPipe } from '@/common/pipe/upload-image-pipe';
 import { EventsService } from './events.service';
@@ -78,6 +80,7 @@ export class EventsController {
     }
 
     @Post()
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Create a new event' })
     @ApiResponse({ status: 201, description: 'Event created', type: EventDetailDto })
@@ -91,6 +94,7 @@ export class EventsController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Update an event (owner only)' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
@@ -108,6 +112,7 @@ export class EventsController {
     }
 
     @Post(':id/images')
+    @UseGuards(AuthGuard)
 
     @UseInterceptors(FilesInterceptor('files', 4))
     @ApiConsumes('multipart/form-data')
@@ -128,6 +133,7 @@ export class EventsController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Delete an event (owner only)' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
@@ -144,6 +150,7 @@ export class EventsController {
     }
 
     @Post(':id/upvote')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Toggle upvote on an event' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
@@ -158,6 +165,7 @@ export class EventsController {
     }
 
     @Post(':id/save')
+    @UseGuards(AuthGuard)
 
     @ApiOperation({ summary: 'Toggle bookmark/save on an event' })
     @ApiParam({ name: 'id', description: 'Event UUID' })
@@ -171,3 +179,4 @@ export class EventsController {
         return this.eventsService.toggleSave(id, userId);
     }
 }
+
