@@ -2,7 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CommentAuthorDto {
     @ApiProperty()
+    id: string;
+
+    @ApiProperty()
     fullName: string;
+
+    @ApiProperty({ nullable: true })
+    avatarUrl: string | null;
 }
 
 export class CommentListItemDto {
@@ -14,9 +20,6 @@ export class CommentListItemDto {
 
     @ApiProperty({ type: 'string', format: 'date-time' })
     createdAt: Date;
-
-    @ApiProperty()
-    userId: string;
 
     @ApiProperty({ type: CommentAuthorDto })
     author: CommentAuthorDto;

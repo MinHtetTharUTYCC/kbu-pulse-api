@@ -9,9 +9,10 @@ export function toCommentListItem(
         id: comment.id,
         content: comment.content,
         createdAt: comment.createdAt,
-        userId: comment.userId,
         author: {
+            id: comment.user.id,
             fullName: comment.user.fullName,
+            avatarUrl: comment.user.avatarUrl ?? null,
         },
         totalLikes: comment._count.likes,
         hasLiked,

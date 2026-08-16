@@ -7,7 +7,9 @@ export const commentListItemSelect = {
     userId: true,
     user: {
         select: {
+            id: true,
             fullName: true,
+            avatarUrl: true,
         },
     },
     _count: {
