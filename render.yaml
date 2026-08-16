@@ -3,8 +3,9 @@ services:
     name: kbu-pulse-api
     runtime: node
     plan: free
-    buildCommand: corepack enable && pnpm install --include=dev && pnpm run db:generate && pnpm run build
+    buildCommand: corepack enable && pnpm install --include=dev && DATABASE_URL=postgresql://user:pass@localhost:5432/db pnpm run db:generate && pnpm run build
     startCommand: corepack enable && pnpm run db:push && pnpm run start:prod
     envVars:
       - key: NODE_ENV
         value: production
+
