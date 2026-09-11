@@ -25,9 +25,17 @@ async function bootstrap() {
         .setDescription('University Events Platform API')
         .setVersion('1.0')
         .build();
+
     const document = SwaggerModule.createDocument(app, config);
+
     SwaggerModule.setup('api/docs', app, document);
+
+    // Serve Swagger/OpenAPI JSON
+    app.getHttpAdapter().get('/api/docs/json', (req, res) => {
+        res.json(document);
+    });
 
     await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap();
